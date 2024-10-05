@@ -72,11 +72,17 @@ npm run seed
 npm run createUser
 print_status "Panel installed. Use 'node .' command in the panel directory to run it."
 
-# Deamon Installation
-print_status "Installing Docker for the Skyport Deamon..."
-curl -sSL https://get.docker.com/ | CHANNEL=stable bash
-
 # Install Deamon Dependencies
+
+# Check if Docker is installed
+if ! command -v docker &> /dev/null
+then
+    print_status "Installing Docker for the Skyport Daemon..."
+    curl -sSL https://get.docker.com/ | CHANNEL=stable bash
+else
+    print_status "Docker is already installed, skipping installation..."
+fi
+
 mkdir -p /etc/apt/keyrings
 curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
 echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_16.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list

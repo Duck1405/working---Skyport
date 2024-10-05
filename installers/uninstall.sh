@@ -84,8 +84,6 @@ uninstall_daemon() {
 }
 
 execute() {
-  echo -e "\n\n* skyport-installer $(date) \n\n" >>$LOG_PATH
-
   if [[ "$1" == "panel" ]]; then
     output "Uninstalling Skyport Panel..."
     uninstall_panel

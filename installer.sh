@@ -41,87 +41,93 @@ set -e
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
+LOG_PATH="/var/log/skyport-installer.log"
 
-# Function to print status
-function print_status() {
-    echo -e "${GREEN}[*] $1${NC}"
+output() {
+  echo -e "* $1"
+}
+
+error() {
+  echo ""
+  echo -e "* ${RED}ERROR${NC}: $1" 1>&2
+  echo ""
 }
 
 # Root Check
 if [ "$EUID" -ne 0 ]; then 
-  echo -e "${RED}Please run as root${NC}"
+  error "Please run as root"
   exit
 fi
 
-# Dependency Installation
-
-# Check if the NodeSource GPG key and repository are already set up
-if [ ! -f /etc/apt/keyrings/nodesource.gpg ]; then
-    print_status "Setting up Node.js repository..."
-    mkdir -p /etc/apt/keyrings
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
-else
-    print_status "Node.js repository is already set up, skipping..."
+# check for curl
+if ! [ -x "$(command -v curl)" ]; then
+  error "curl is required in order for this script to work."
+  error "install using apt (Debian and derivatives) or yum/dnf (CentOS)"
+  exit 1
 fi
 
-apt update
-apt install -y nodejs git
+execute() {
+  echo -e "\n\n* skyport-installer $(date) \n\n" >>$LOG_PATH
 
-# Panel Installation
-print_status "Installing Skyport Panel..."
-mkdir -p /etc/skyport
-cd /etc/skyport
+  if [[ "$1" == "panel" ]]; then
+    output "Installing Skyport Panel..."
+    bash <(curl -s https://raw.githubusercontent.com/ItzLoghotXD/Skyport/main/installers/panel.sh)
+  elif [[ "$1" == "deamon" ]]; then
+    output "Installing Skyport Daemon..."
+    bash <(curl -s https://raw.githubusercontent.com/ItzLoghotXD/Skyport/main/installers/deamon.sh)
+  elif [[ "$1" == "uninstall" ]]; then
+    output "Uninstalling Skyport Panel/Daemon..."
+    bash <(curl -s https://raw.githubusercontent.com/ItzLoghotXD/Skyport/main/installers/uninstall.sh)
+  elif [[ "$1" == "exit" ]]; then
+    exit
+  fi
 
-if [ -d "panel" ]; then
-    echo -e "${RED}Directory 'panel' already exists, skipping cloning.${NC}"
-else
-    git clone https://github.com/skyportlabs/panel
-fi
+  if [[ -n $2 ]]; then
+    echo -e -n "* Installation of $1 completed. Do you want to proceed to $2 installation? (y/N): "
+    read -r CONFIRM
+    if [[ "$CONFIRM" =~ [Yy] ]]; then
+      execute "$2"
+    else
+      error "Installation of $2 aborted."
+      exit 1
+    fi
+  fi
+}
 
-cd panel
-npm install && npm install axios
-npm run seed
-npm run createUser
-print_status "Panel installed. Use 'node .' command in the panel directory to run it."
+done=false
+while [ "$done" == false ]; do
+  options=(
+    "Install the panel"
+    "Install deamon"
+    "Install both [0] and [1] on the same machine (deamon script runs after panel)"
+    # "Uninstall panel or deamon\n"
 
-# Install Deamon Dependencies
+    "Uninstall panel or deamon"
+    "exit"
+  )
 
-# Check if Docker is installed
-if ! command -v docker &> /dev/null
-then
-    print_status "Installing Docker for the Skyport Daemon..."
-    curl -sSL https://get.docker.com/ | CHANNEL=stable bash
-else
-    print_status "Docker is already installed, skipping installation..."
-fi
+  actions=(
+    "panel"
+    "deamon"
+    "panel;deamon"
+    # "uninstall"
 
-# Check if the NodeSource GPG key and repository are already set up
-if [ ! -f /etc/apt/keyrings/nodesource.gpg ]; then
-    print_status "Setting up Node.js repository..."
-    mkdir -p /etc/apt/keyrings
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
-else
-    print_status "Node.js repository is already set up, skipping..."
-fi
+    "uninstall"
+    "exit"
+  )
 
-apt update
-apt install -y nodejs git
+  output "What would you like to do?"
 
-# Deamon Installation
-print_status "Installing Skyport Deamon..."
-cd /etc/skyport
+  for i in "${!options[@]}"; do
+    output "[$i] ${options[$i]}"
+  done
 
-if [ -d "skyportd" ]; then
-    echo -e "${RED}Directory 'skyportd' already exists, skipping cloning.${NC}"
-else
-    git clone https://github.com/skyportlabs/skyportd
-fi
+  echo -n "* Input 0-$((${#actions[@]} - 1)): "
+  read -r action
 
-cd skyportd
-npm install && npm install axios
-print_status "Deamon installed. Create and configure a node in the panel, paste the token here, then use 'node .' command in the deamon directory to run it."
+  [ -z "$action" ] && error "Input is required" && continue
 
-# Final Message
-print_status "Installation completed!"
+  valid_input=("$(for ((i = 0; i <= ${#actions[@]} - 1; i += 1)); do echo "${i}"; done)")
+  [[ ! " ${valid_input[*]} " =~ ${action} ]] && error "Invalid option"
+  [[ " ${valid_input[*]} " =~ ${action} ]] && done=true && IFS=";" read -r i1 i2 <<<"${actions[$action]}" && execute "$i1" "$i2"
+done

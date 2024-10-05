@@ -72,7 +72,13 @@ apt install -y nodejs git
 print_status "Installing Skyport Panel..."
 mkdir -p /etc/skyport
 cd /etc/skyport
-git clone https://github.com/skyportlabs/panel
+
+if [ -d "panel" ]; then
+    echo -e "${RED}Directory 'panel' already exists, skipping cloning.${NC}"
+else
+    git clone https://github.com/skyportlabs/panel
+fi
+
 cd panel
 npm install && npm install axios
 npm run seed
@@ -106,7 +112,13 @@ apt install -y nodejs git
 # Deamon Installation
 print_status "Installing Skyport Deamon..."
 cd /etc/skyport
-git clone https://github.com/skyportlabs/skyportd
+
+if [ -d "skyportd" ]; then
+    echo -e "${RED}Directory 'skyportd' already exists, skipping cloning.${NC}"
+else
+    git clone https://github.com/skyportlabs/skyportd
+fi
+
 cd skyportd
 npm install && npm install axios
 print_status "Deamon installed. Create and configure a node in the panel, paste the token here, then use 'node .' command in the deamon directory to run it."

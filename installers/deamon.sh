@@ -112,4 +112,5 @@ cd skyportd
 output "Installing packages."
 npm install && npm install axios
 success "Packages installed"
-success "Deamon installed. Create and configure a node in the panel, paste the token here, then use 'node /etc/skyport/skyportd' command as root to run it."
+success "Deamon installed. Create and configure a node in the panel, paste the token here, then use 'node /etc/skyport/skyportd/index.js' command as root in root folder to start the deamon."
+output "Open/Forword these ports - 3000, 3001, 3002, and 3003"

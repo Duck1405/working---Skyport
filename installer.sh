@@ -54,10 +54,17 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Dependency Installation
-print_status "Installing dependencies (Node.js, Git)..."
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+
+# Check if the NodeSource GPG key and repository are already set up
+if [ ! -f /etc/apt/keyrings/nodesource.gpg ]; then
+    print_status "Setting up Node.js repository..."
+    mkdir -p /etc/apt/keyrings
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+else
+    print_status "Node.js repository is already set up, skipping..."
+fi
+
 apt update
 apt install -y nodejs git
 
@@ -83,9 +90,16 @@ else
     print_status "Docker is already installed, skipping installation..."
 fi
 
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_16.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+# Check if the NodeSource GPG key and repository are already set up
+if [ ! -f /etc/apt/keyrings/nodesource.gpg ]; then
+    print_status "Setting up Node.js repository..."
+    mkdir -p /etc/apt/keyrings
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
+else
+    print_status "Node.js repository is already set up, skipping..."
+fi
+
 apt update
 apt install -y nodejs git
 

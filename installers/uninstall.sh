@@ -57,7 +57,6 @@ fi
 
 # Function to uninstall Skyport Panel
 uninstall_panel() {
-    output "Uninstalling Skyport Panel..."
     if [ -d "/etc/skyport/panel" ]; then
         rm -rf /etc/skyport/panel
         success "Skyport Panel uninstalled successfully."
@@ -68,7 +67,6 @@ uninstall_panel() {
 
 # Function to uninstall Skyport Daemon
 uninstall_daemon() {
-    output "Uninstalling Skyport Daemon..."
     # if docker ps -a | grep -q "skyport_daemon"; then
     #     docker stop skyport_daemon && docker rm skyport_daemon
     #     success "Skyport Daemon stopped and removed."

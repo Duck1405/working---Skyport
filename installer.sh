@@ -79,6 +79,8 @@ execute() {
     output "Uninstalling Skyport Panel/Daemon..."
     bash <(curl -s https://raw.githubusercontent.com/ItzLoghotXD/Skyport/main/installers/uninstall.sh)
   elif [[ "$1" == "exit" ]]; then
+    output "Thankyou for using my script. I think that this script might have some issues, feel free to open an issue at https://github.com/ItzLoghotXD/Skyport/issues."
+    output "If you want to support me and if you can then please support me with crypto here(https://github.com/ItzLoghotXD/Skyport/blob/main/README.md#donationssupport)"
     exit
   fi
 
@@ -87,8 +89,6 @@ execute() {
     read -r CONFIRM
     if [[ "$CONFIRM" =~ [Yy] ]]; then
       execute "$2"
-      output "Thankyou for using my script. I think that this script might have some issues, feel free to open an issue at https://github.com/ItzLoghotXD/Skyport/issues."
-    output "If you want to support me and if you can then please support me with crypto here(https://github.com/ItzLoghotXD/Skyport/blob/main/README.md#donationssupport)"
     else
       error "Installation of $2 aborted."
       output "Thankyou for using my script. I think that this script might have some issues, feel free to open an issue at https://github.com/ItzLoghotXD/Skyport/issues."

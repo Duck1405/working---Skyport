@@ -72,21 +72,13 @@ execute() {
   if [[ "$1" == "panel" ]]; then
     output "Installing Skyport Panel..."
     bash <(curl -s https://raw.githubusercontent.com/ItzLoghotXD/Skyport/main/installers/panel.sh)
-    output "Thankyou for using my script. I think that this script might have some issues, feel free to open an issue at https://github.com/ItzLoghotXD/Skyport/issues."
-    output "If you want to support me and if you can then please support me with crypto here(https://github.com/ItzLoghotXD/Skyport/blob/main/README.md#donationssupport)"
   elif [[ "$1" == "deamon" ]]; then
     output "Installing Skyport Daemon..."
     bash <(curl -s https://raw.githubusercontent.com/ItzLoghotXD/Skyport/main/installers/deamon.sh)
-    output "Thankyou for using my script. I think that this script might have some issues, feel free to open an issue at https://github.com/ItzLoghotXD/Skyport/issues."
-    output "If you want to support me and if you can then please support me with crypto here(https://github.com/ItzLoghotXD/Skyport/blob/main/README.md#donationssupport)"
   elif [[ "$1" == "uninstall" ]]; then
     output "Uninstalling Skyport Panel/Daemon..."
     bash <(curl -s https://raw.githubusercontent.com/ItzLoghotXD/Skyport/main/installers/uninstall.sh)
-    output "Thankyou for using my script. I think that this script might have some issues, feel free to open an issue at https://github.com/ItzLoghotXD/Skyport/issues."
-    output "If you want to support me and if you can then please support me with crypto here(https://github.com/ItzLoghotXD/Skyport/blob/main/README.md#donationssupport)"
   elif [[ "$1" == "exit" ]]; then
-    output "Thankyou for using my script. I think that this script might have some issues, feel free to open an issue at https://github.com/ItzLoghotXD/Skyport/issues."
-    output "If you want to support me and if you can then please support me with crypto here(https://github.com/ItzLoghotXD/Skyport/blob/main/README.md#donationssupport)"
     exit
   fi
 
@@ -143,3 +135,5 @@ while [ "$done" == false ]; do
   [[ ! " ${valid_input[*]} " =~ ${action} ]] && error "Invalid option"
   [[ " ${valid_input[*]} " =~ ${action} ]] && done=true && IFS=";" read -r i1 i2 <<<"${actions[$action]}" && execute "$i1" "$i2"
 done
+output "Thankyou for using my script. I think that this script might have some issues, feel free to open an issue at https://github.com/ItzLoghotXD/Skyport/issues."
+output "If you want to support me and if you can then please support me with crypto here(https://github.com/ItzLoghotXD/Skyport/blob/main/README.md#donationssupport)"

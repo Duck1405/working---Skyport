@@ -112,4 +112,5 @@ else
     output "User account creation skipped."
 fi
 
-success "Panel installed. Use 'node /etc/skyport/panel/index.js' command as root to run panel."
+success "Panel installed. Use 'node /etc/skyport/panel/index.js' command as root in root folder to start the panel."
+output "Open/Forword these ports - 3000, 3001, 3002, and 3003"

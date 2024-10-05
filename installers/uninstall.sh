@@ -69,14 +69,14 @@ uninstall_panel() {
 # Function to uninstall Skyport Daemon
 uninstall_daemon() {
     output "Uninstalling Skyport Daemon..."
-    if docker ps -a | grep -q "skyport_daemon"; then
-        docker stop skyport_daemon && docker rm skyport_daemon
-        success "Skyport Daemon stopped and removed."
-    else
-        error "Skyport Daemon container not found."
-    fi
-    if [ -d "/etc/skyport/daemon" ]; then
-        rm -rf /etc/skyport/daemon
+    # if docker ps -a | grep -q "skyport_daemon"; then
+    #     docker stop skyport_daemon && docker rm skyport_daemon
+    #     success "Skyport Daemon stopped and removed."
+    # else
+    #     error "Skyport Daemon container not found."
+    # fi
+    if [ -d "/etc/skyport/skyportd" ]; then
+        rm -rf /etc/skyport/skyportd
         success "Skyport Daemon files removed."
     else
         error "Skyport Daemon is not installed."
@@ -87,13 +87,9 @@ execute() {
   if [[ "$1" == "panel" ]]; then
     output "Uninstalling Skyport Panel..."
     uninstall_panel
-    output "Thankyou for using my script. I think that this script might have some issues, feel free to open an issue at https://github.com/ItzLoghotXD/Skyport/issues."
-    output "If you want to support me and if you can then please support me with crypto here(https://github.com/ItzLoghotXD/Skyport/blob/main/README.md#donationssupport)"
   elif [[ "$1" == "deamon" ]]; then
     output "Uninstalling Skyport Daemon..."
     uninstall_daemon
-    output "Thankyou for using my script. I think that this script might have some issues, feel free to open an issue at https://github.com/ItzLoghotXD/Skyport/issues."
-    output "If you want to support me and if you can then please support me with crypto here(https://github.com/ItzLoghotXD/Skyport/blob/main/README.md#donationssupport)"
   elif [[ "$1" == "exit" ]]; then
     exit
   fi
@@ -103,12 +99,8 @@ execute() {
     read -r CONFIRM
     if [[ "$CONFIRM" =~ [Yy] ]]; then
       execute "$2"
-      output "Thankyou for using my script. I think that this script might have some issues, feel free to open an issue at https://github.com/ItzLoghotXD/Skyport/issues."
-    output "If you want to support me and if you can then please support me with crypto here(https://github.com/ItzLoghotXD/Skyport/blob/main/README.md#donationssupport)"
     else
       error "Uninstallation of $2 aborted."
-      output "Thankyou for using my script. I think that this script might have some issues, feel free to open an issue at https://github.com/ItzLoghotXD/Skyport/issues."
-      output "If you want to support me and if you can then please support me with crypto here(https://github.com/ItzLoghotXD/Skyport/blob/main/README.md#donationssupport)"
       exit 1
     fi
   fi

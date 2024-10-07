@@ -36,7 +36,7 @@ async function seed() {
 
 async function performSeeding() {
   try {
-    const imagesIndexResponse = await axios.get('https://raw.githubusercontent.com/skyportlabs/images_v2/main/seed/0.1.0-beta2.json');
+    const imagesIndexResponse = await axios.get('https://raw.githubusercontent.com/ItzLoghotXD/Skyport/main/images/seed/v1.0.0.json');
     const imageUrls = imagesIndexResponse.data;
     let imageDataArray = [];
 

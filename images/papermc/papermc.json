@@ -1,0 +1,47 @@
+{
+"Image": "docker.io/itzloghotxd/java:latest",
+  "AltImages": [
+    "docker.io/itzloghotxd/java:21",
+    "docker.io/itzloghotxd/java:17",
+    "docker.io/itzloghotxd/java:16",
+    "docker.io/itzloghotxd/java:11",
+    "docker.io/itzloghotxd/java:8"
+  ],
+  "Cmd": "",
+  "Env": [
+    "START=java -Xms128M -XX:MaxRAMPercentage=95.0 -Dterminal.jline=false -Dterminal.ansi=true -jar server.jar"
+  ],
+  "StopCommand": "stop",
+  "features":["eula"],
+  "Scripts": {
+    "Install": [
+      {
+        "Uri": "https://api.papermc.io/v2/projects/paper/versions/{{Version}}/builds/{{Build}}/downloads/paper-{{Version}}-{{Build}}.jar",
+        "Path": "server.jar"
+      },
+      {
+        "Uri": "https://raw.githubusercontent.com/Skyport/main/images/papermc/server.properties",
+        "Path": "server.properties"
+      }
+    ]
+  },
+  "Variables": {
+    "Version": {
+      "type": "text",
+      "default": "1.21.1",
+      "required": true
+    },
+    "Build": {
+      "type": "text",
+      "default": "119",
+      "required": true
+    }
+  },
+  "Name": "Minecraft Java: PaperMC",
+  "Description": "PaperMC is an optimized, high-performance fork of SpigotMC for Minecraft servers. It aims to improve performance and stability by offering additional features, enhanced configuration options, and bug fixes. Known for its robust plugin compatibility and active development community, PaperMC is a preferred choice for server administrators looking to enhance their Minecraft multiplayer experience.",
+  "Author": "itzloghotxd@gmail.com",
+  "AuthorName": "ItzLoghotXD",
+  "Meta": {
+    "Version": "Images v1"
+  }
+}

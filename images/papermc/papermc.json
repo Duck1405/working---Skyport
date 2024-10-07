@@ -18,10 +18,6 @@
       {
         "Uri": "https://api.papermc.io/v2/projects/paper/versions/{{Version}}/builds/{{Build}}/downloads/paper-{{Version}}-{{Build}}.jar",
         "Path": "server.jar"
-      },
-      {
-        "Uri": "https://raw.githubusercontent.com/ItzLoghotXD/Skyport/main/images/papermc/server.properties",
-        "Path": "server.properties"
       }
     ]
   },

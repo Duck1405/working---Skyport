@@ -1,0 +1,38 @@
+{
+"Image": "docker.io/itzloghotxd/java:latest",
+  "AltImages": [
+    "docker.io/itzloghotxd/java:21",
+    "docker.io/itzloghotxd/java:17",
+    "docker.io/itzloghotxd/java:16",
+    "docker.io/itzloghotxd/java:11",
+    "docker.io/itzloghotxd/java:8"
+  ],
+  "Cmd": "",
+  "Env": [
+    "START=java -Xms128M -XX:MaxRAMPercentage=95.0 -Dterminal.jline=false -Dterminal.ansi=true -jar server.jar"
+  ],
+  "StopCommand": "stop",
+  "features":["eula"],
+  "Scripts": {
+    "Install": [
+      {
+        "Uri": "https://download.getbukkit.org/spigot/spigot-{{Version}}.jar",
+        "Path": "server.jar"
+      }
+    ]
+  },
+  "Variables": {
+    "Version": {
+      "type": "text",
+      "default": "1.21",
+      "required": true
+    }
+  },
+  "Name": "Minecraft Java: SpigotMC",
+  "Description": "SpigotMC is a high-performance, open-source server software for Minecraft, designed to enhance and optimize the game's multiplayer experience. It offers extensive configuration options, a vibrant plugin ecosystem, and active community support, making it a popular choice for server administrators seeking to improve gameplay and server performance.",
+  "Author": "itzloghotxd@gmail.com",
+  "AuthorName": "ItzLoghotXD",
+  "Meta": {
+    "Version": "Images v1"
+  }
+}

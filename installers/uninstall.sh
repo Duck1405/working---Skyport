@@ -60,6 +60,9 @@ uninstall_panel() {
     if [ -d "/etc/skyport/panel" ]; then
         rm -rf /etc/skyport/panel
         success "Skyport Panel uninstalled successfully."
+    elif [ -d "/etc/Skyport/panel"]: then
+        rm -rf /etc/Skyport/panel
+        success "Skyport Panel uninstalled successfully."
     else
         error "Skyport Panel is not installed."
     fi
@@ -76,6 +79,9 @@ uninstall_daemon() {
     if [ -d "/etc/skyport/skyportd" ]; then
         rm -rf /etc/skyport/skyportd
         success "Skyport Daemon files removed."
+    elif [ -d "/etc/Skyport/deamon"]: then
+        rm -rf /etc/Skyport/deamon
+        success "Skyport Deamon uninstalled successfully."
     else
         error "Skyport Daemon is not installed."
     fi

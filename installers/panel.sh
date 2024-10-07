@@ -91,20 +91,20 @@ execute() {
 
     # Panel Installation
     output "Installing Skyport Panel files"
-    mkdir /etc/Skyport
+    mkdir -p /etc/Skyport
     cd /etc
 
     if [ -d "Skyport/panel" ]; then
         output "Directory 'panel' already exists, skipping cloning."
     else
-        mkdir tempspdir
+        mkdir -p tempspdir
         cd tempspdir
         git clone https://github.com/ItzLoghotXD/Skyport
         cd Skyport
         mv /etc/tempspdir/Skyport/panel /etc/Skyport/panel
         cd /etc
         rm -rf tempspdir
-        success "Cloned deamon files."
+        success "Cloned panel files."
     fi
 
     cd /etc/Skyport/panel

@@ -101,13 +101,13 @@ execute() {
 
     # Deamon Installation
     output "Installing Skyport Deamon files"
-    mkdir /etc/Skyport
+    mkdir -p /etc/Skyport
     cd /etc
 
     if [ -d "Skyport/deamon" ]; then
         output "Directory 'deamon' already exists, skipping cloning."
     else
-        mkdir tempspdir
+        mkdir -p tempspdir
         cd tempspdir
         git clone https://github.com/ItzLoghotXD/Skyport
         cd Skyport

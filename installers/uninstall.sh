@@ -58,13 +58,13 @@ fi
 # Function to uninstall Skyport Panel
 uninstall_panel() {
     if [ -d "/etc/skyport/panel" ]; then
-        rm -rf /etc/skyport/panel
-        success "Skyport Panel uninstalled successfully."
-    elif [ -d "/etc/Skyport/panel" ]; then  # Fixed spacing here
-        rm -rf /etc/Skyport/panel
-        success "Skyport Panel uninstalled successfully."
+      rm -rf /etc/skyport/panel
+      success "Skyport Panel uninstalled successfully."
+    elif [ -d "/etc/Skyport/panel" ]; then
+      rm -rf /etc/Skyport/panel
+      success "Skyport Panel uninstalled successfully."
     else
-        error "Skyport Panel is not installed."
+      error "Skyport Panel is not installed."
     fi
 }
 
@@ -79,13 +79,13 @@ uninstall_daemon() {
     # fi
 
     if [ -d "/etc/skyport/skyportd" ]; then
-        rm -rf /etc/skyport/skyportd
-        success "Skyport Daemon files removed."
-    elif [ -d "/etc/Skyport/daemon" ]; then  # Fixed spacing and spelling here
-        rm -rf /etc/Skyport/daemon
-        success "Skyport Daemon uninstalled successfully."
+      rm -rf /etc/skyport/skyportd
+      success "Skyport Daemon files removed."
+    elif [ -d "/etc/Skyport/daemon" ]; then
+      rm -rf /etc/Skyport/daemon
+      success "Skyport Daemon uninstalled successfully."
     else
-        error "Skyport Daemon is not installed."
+      error "Skyport Daemon is not installed."
     fi
 }
 

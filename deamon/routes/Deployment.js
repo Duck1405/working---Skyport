@@ -210,20 +210,26 @@ const deleteContainer = async (req, res) => {
 const redeployContainer = async (req, res) => {
     const { id } = req.params;
     const container = docker.getContainer(id);
-    try {
-        const { Idd } = req.params;
-        await updateState(Idd, 'INSTALLING');
-        const containerInfo = await container.inspect();
-        if (containerInfo.State.Running) {
-            console.log(`Stopping container ${id}`);
-            await container.stop();
-        }
-        console.log(`Removing container ${id}`);
-        await container.remove();
+    const maxRetries = 5; // Maximum number of retries
+    let attempt = 0;
 
-        const { Image, Id, Ports, Memory, Cpu, PortBindings, Env } = req.body;
-        const volumePath = path.join(__dirname, '../volumes', Id);
+    while (attempt < maxRetries) {
         try {
+            attempt++;
+            const { Idd } = req.params;
+            await updateState(Idd, 'INSTALLING');
+            const containerInfo = await container.inspect();
+            if (containerInfo.State.Running) {
+                console.log(`Stopping container ${id}`);
+                await container.stop();
+            }
+            console.log(`Removing container ${id}`);
+            await container.remove();
+
+            const { Image, Id, Ports, Memory, Cpu, PortBindings, Env } = req.body;
+            const volumePath = path.join(__dirname, '../volumes', Id);
+            
+            // Pull the image
             const stream = await docker.pull(Image);
             await new Promise((resolve, reject) => {
                 docker.modem.followProgress(stream, (err, result) => {
@@ -234,21 +240,29 @@ const redeployContainer = async (req, res) => {
                     resolve(result);
                 });
             });
+
+            const containerOptions = createContainerOptions({
+                Image, Id, Ports, Memory, Cpu, PortBindings, Env
+            }, volumePath);
+
+            const newContainer = await docker.createContainer(containerOptions);
+            await newContainer.start();
+            res.status(200).json({ message: 'Container redeployed successfully', containerId: newContainer.id });
+            await updateState(Idd, 'READY', newContainer.id);
+            return; // Exit if successful
         } catch (err) {
-            console.error(`Error pulling image ${Image}:`, err);
-            return res.status(500).json({ message: err.message });
+            console.error(`Attempt ${attempt} failed: ${err.message}`);
+            if (attempt === maxRetries) {
+                console.error(`Max retries reached. Deleting container ${id}.`);
+                try {
+                    await container.remove();
+                    return res.status(500).json({ message: `Failed to redeploy after ${maxRetries} attempts. Container deleted.` });
+                } catch (deleteErr) {
+                    console.error(`Failed to delete container: ${deleteErr.message}`);
+                    return res.status(500).json({ message: `Failed to redeploy and delete container: ${deleteErr.message}` });
+                }
+            }
         }
-
-        const containerOptions = createContainerOptions({
-            Image, Id, Ports, Memory, Cpu, PortBindings, Env
-        }, volumePath);
-
-        const newContainer = await docker.createContainer(containerOptions);
-        await newContainer.start();
-        res.status(200).json({ message: 'Container redeployed successfully', containerId: newContainer.id });
-        await updateState(Idd, 'READY', newContainer.id);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
     }
 };
 
